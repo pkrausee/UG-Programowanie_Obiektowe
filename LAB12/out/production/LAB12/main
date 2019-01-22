@@ -1,0 +1,14 @@
+sqlite3
+.databases
+create table main.pensje (imie char(20), pensja int);
+.tables
+insert into pensje values ("Abacki", 500);
+insert into pensje values ("Babacki", 1000);
+select * from pensje;
+.backup main
+.quit
+
+sqlite3
+.restore main
+.tables
+select * from pensje;
