@@ -63,6 +63,25 @@ public class BoardController {
         return count < 3;
     }
 
+    public String wrongVals(Board b) {
+        StringBuilder sb = new StringBuilder("");
+        sb.append("Złe pola:<br>");
+
+        for(int i = 1; i < b.getSize() - 1; i++)
+            for( int j = 1; j < b.getSize() - 1; j++) {
+                if(!checkVal(b, b.getBoard()[i][j], i ,j) && b.getBoard()[i][j] != 0) {
+                    sb.append("X: ");
+                    sb.append(i);
+                    sb.append(" Y: ");
+                    sb.append(j);
+                    sb.append(" Wartosc: ");
+                    sb.append(b.getBoard()[i][j]);
+                    sb.append("<br>\n");
+                }
+            }
+        return sb.toString();
+    }
+
     public void fillCounters(Board b) {
         int visibleTowers;
         int tallestTower;
@@ -168,16 +187,73 @@ public class BoardController {
 
     public boolean checkBoard(Board b) {
         int wrongVals = 0;
-
         for (int i = 1; i < b.getSize() - 1; i++)
-            for (int j = 1; j < b.getSize() - 1; j++)
+            for (int j = 1; j < b.getSize() - 1; j++) {
                 if (!checkVal(b, (b.getBoard())[i][j], i, j)) {
 //                    System.out.println(i + " " + j + " " + (b.getBoard())[i][j]);
                     wrongVals++;
                 }
+            }
+
+        boolean guard = true;
+        int visibleTowers;
+        int tallestTower;
+        for (int i = 0; i < b.getSize(); i++) {
+            for (int j = 0; j < b.getSize(); j++) {
+                if (i == 0 && j > 0 && j < b.getSize() - 1) {
+                    //Gorna linia
+                    visibleTowers = 0;
+                    tallestTower = 0;
+                    for (int k = 1; k < b.getSize() - 1; k++) {
+                        if ((b.getBoard())[k][j] > tallestTower) {
+                            tallestTower = (b.getBoard())[k][j];
+                            visibleTowers++;
+                        }
+                    }
+                    if((b.getBoard())[i][j] != visibleTowers)
+                        guard = false;
+                } else if (j == 0 && i > 0 && i < b.getSize() - 1) {
+                    //Lewa linia
+                    visibleTowers = 0;
+                    tallestTower = 0;
+                    for (int k = 1; k < b.getSize() - 1; k++) {
+                        if ((b.getBoard())[i][k] > tallestTower) {
+                            tallestTower = (b.getBoard())[i][k];
+                            visibleTowers++;
+                        }
+                    }
+                    if((b.getBoard())[i][j] != visibleTowers)
+                        guard = false;
+                } else if (j == b.getSize() - 1 && i > 0 && i < b.getSize() - 1) {
+                    //Prawa linia
+                    visibleTowers = 0;
+                    tallestTower = 0;
+                    for (int k = b.getSize() - 2; k > 0; k--) {
+                        if ((b.getBoard())[i][k] > tallestTower) {
+                            tallestTower = (b.getBoard())[i][k];
+                            visibleTowers++;
+                        }
+                    }
+                    if((b.getBoard())[i][j] != visibleTowers)
+                        guard = false;
+                } else if (i == b.getSize() - 1 && j > 0 && j < b.getSize() - 1) {
+                    //Dolna linia
+                    visibleTowers = 0;
+                    tallestTower = 0;
+                    for (int k = b.getSize() - 2; k > 0; k--) {
+                        if ((b.getBoard())[k][j] > tallestTower) {
+                            tallestTower = (b.getBoard())[k][j];
+                            visibleTowers++;
+                        }
+                    }
+                    if((b.getBoard())[i][j] != visibleTowers)
+                        guard = false;
+                }
+            }
+        }
 
         //true jesli wszystkie wartosci sa prawidlowo ustawione
-        return wrongVals == 0;
+        return wrongVals == 0 && guard;
     }
 
     public void showBoard(Board b) {

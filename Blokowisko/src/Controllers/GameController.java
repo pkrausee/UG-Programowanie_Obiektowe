@@ -185,7 +185,7 @@ public class GameController implements Serializable {
                         "<font color=red>Plansza nie została poprawnie uzupełniona</font>\n" +
                         "</html></center>\n");
                 checkBoardBox.getText2().setText("<html><center>\n" +
-//                        "Błędne pola zostały zaznaczone na czerwono.\n" +
+                        bc.wrongVals(g.getCurrBoard()) +
                         "</html></center>\n");
 
                 checkBoardBox.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
